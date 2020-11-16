@@ -12,6 +12,9 @@ interface ContactDao {
     @Query("SELECT * FROM contact_database WHERE id = :id")
     fun findById(id: Int): ContactEntity
 
+    @Query("DELETE FROM contact_database")
+    fun clear()
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(contacts: List<ContactEntity>)
 

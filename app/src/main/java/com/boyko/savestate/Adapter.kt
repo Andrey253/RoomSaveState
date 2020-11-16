@@ -5,9 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.boyko.savestate.model.ContactEntity
 
 
-class Adapter(var items: List<ContactModel>, val callback: Callback) : RecyclerView.Adapter<Adapter.MainHolder>() {
+class Adapter(var items: List<ContactEntity>, val callback: Callback) : RecyclerView.Adapter<Adapter.MainHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MainHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.contact_item, parent, false)
@@ -24,7 +25,7 @@ class Adapter(var items: List<ContactModel>, val callback: Callback) : RecyclerV
         private val firstName = itemView.findViewById<TextView>(R.id.contact_name)
         private val lastName = itemView.findViewById<TextView>(R.id.contact_number)
 
-        fun bind(item: ContactModel) {
+        fun bind(item: ContactEntity) {
             firstName.text = item.username
             lastName.text = item.phone
             itemView.setOnClickListener {
@@ -34,6 +35,6 @@ class Adapter(var items: List<ContactModel>, val callback: Callback) : RecyclerV
     }
 
     interface Callback {
-        fun onItemClicked(item: ContactModel)
+        fun onItemClicked(item: ContactEntity)
     }
 }

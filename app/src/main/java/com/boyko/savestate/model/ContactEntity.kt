@@ -8,5 +8,5 @@ data class ContactEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
     val username: String,
-    val phone: Long,
+    val phone: String,
 )

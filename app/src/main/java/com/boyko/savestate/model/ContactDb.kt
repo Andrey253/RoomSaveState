@@ -21,7 +21,7 @@ abstract class ContactDb : RoomDatabase() {
                 INSTANCE = Room.databaseBuilder(
                     context,
                     ContactDb::class.java,
-                    "roomdb")
+                    "roomdatabase")
                     .build()
             }
             return INSTANCE as ContactDb

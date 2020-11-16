@@ -16,6 +16,8 @@ import org.jetbrains.anko.uiThread
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mDb: ContactDb
+    private var toWriteArrayContact = arrayListOf<ContactEntity>()
+    private var toReadArrayContact: List<ContactEntity>  = arrayListOf<ContactEntity>()
 
     private val recyclerViewContact: RecyclerView
         get() {
@@ -26,31 +28,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initcontacts()
+        checkpermission()
 
-        ///////////////
         mDb = ContactDb.getInstance(applicationContext)
-
-        val contact = ContactEntity(
-            id = null,
-            username = "Andrey",
-            phone = 89095403710
-        )
 
         doAsync {
             // Put the student in database
-            mDb.contasctDao().insert(contacts = arrayListOf(contact))
 
+            mDb.contasctDao().clear()
+            mDb.contasctDao().insert(toWriteArrayContact)
+
+            toReadArrayContact = mDb.contasctDao().getAll()
+
+            setrecycleview(toReadArrayContact)
             uiThread {
-                toast("One record inserted.")
+                toast("Из базы данных извлечено ${toReadArrayContact.size} записей")
             }
         }
 
-
-        ////////////
         recyclerViewContact.layoutManager = LinearLayoutManager(this)
 
-        checkpermission()
+
     }
     private fun checkpermission() {
         if ( PermissionChecker.checkSelfPermission(this, android.Manifest.permission.READ_CONTACTS) == PermissionChecker.PERMISSION_GRANTED)
@@ -62,21 +60,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun initcontacts() {
         //TODO("Not yet implemented")
-        var arrayContacts = arrayListOf<ContactModel>()
+        //var arrayContacts = arrayListOf<ContactModel>()
+
         var cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)
         cursor?.let {
             while (it.moveToNext()){
                 val username = it.getString(it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
                 val numberphone = it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                val newModel = ContactModel()
-                newModel.username = username
-                newModel.phone = numberphone.replace(Regex("[\\s,-]"),"")
-                arrayContacts.add(newModel)
+                //val newModel = ContactModel()
+                val newM = ContactEntity(null, username, numberphone.replace(Regex("[\\s,-]"),""))
+                //newModel.username = username
+                //newModel.phone = numberphone.replace(Regex("[\\s,-]"),"")
+                //arrayContacts.add(newModel)
+                toWriteArrayContact.add(newM)
             }
         }
         cursor?.close()
-        val myAdapter = Adapter(arrayContacts, object : Adapter.Callback {
-            override fun onItemClicked(item: ContactModel) {
+    }
+
+    private fun setrecycleview(array: List<ContactEntity>) {
+        val myAdapter = Adapter(array, object : Adapter.Callback {
+            override fun onItemClicked(item: ContactEntity) {
                 //TODO Сюда придёт элемент, по которому кликнули. Можно дальше с ним работать
             }
         })
