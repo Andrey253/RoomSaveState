@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         doAsync {
             // Put the student in database
 
-            mDb.contasctDao().clear()
+            //mDb.contasctDao().clear()
             mDb.contasctDao().insert(toWriteArrayContact)
 
             toReadArrayContact = mDb.contasctDao().getAll()
@@ -65,10 +65,11 @@ class MainActivity : AppCompatActivity() {
         var cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)
         cursor?.let {
             while (it.moveToNext()){
+                val id = it.getInt(it.getColumnIndex(ContactsContract.Contacts.NAME_RAW_CONTACT_ID))
                 val username = it.getString(it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
                 val numberphone = it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
                 //val newModel = ContactModel()
-                val newM = ContactEntity(null, username, numberphone.replace(Regex("[\\s,-]"),""))
+                val newM = ContactEntity(id = id, username, numberphone.replace(Regex("[\\s,-]"),""))
                 //newModel.username = username
                 //newModel.phone = numberphone.replace(Regex("[\\s,-]"),"")
                 //arrayContacts.add(newModel)

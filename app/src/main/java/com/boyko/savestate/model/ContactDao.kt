@@ -1,6 +1,5 @@
 package com.boyko.savestate.model
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -15,7 +14,7 @@ interface ContactDao {
     @Query("DELETE FROM contact_database")
     fun clear()
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(contacts: List<ContactEntity>)
 
     @Update
